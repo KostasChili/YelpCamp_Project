@@ -6,6 +6,7 @@ const Campground = require('./models/campground');
 const methodOverride = require('method-override');
 const { urlencoded } = require('express');
 const campground = require('./models/campground');
+const { findByIdAndDelete } = require('./models/campground');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
 
@@ -58,6 +59,7 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
     res.render('campgrounds/edit.ejs', { campground });
 });
 
+//update route that updates the campground in the db via url encoded data
 app.put('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -66,6 +68,11 @@ app.put('/campgrounds/:id', async (req, res) => {
     res.redirect(`/campgrounds/${updatedCampground._id}`)
 });
 
+app.delete("/campgrounds/:id",async(req,res)=>{
+const {id}=req.params;
+const deletedCampground=await Campground.findByIdAndDelete(id);
+res.redirect('/campgrounds');
+});
 
 app.listen(port, () => {
     console.log(`server running at port ${port}`);
