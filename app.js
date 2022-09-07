@@ -7,6 +7,8 @@ const methodOverride = require('method-override');
 const { urlencoded } = require('express');
 const campground = require('./models/campground');
 const { findByIdAndDelete } = require('./models/campground');
+const ejsMate= require('ejs-mate');
+const { ppid } = require('process');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
 
@@ -15,12 +17,15 @@ db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', () => { console.log("DB connected") });
 const app = express();
 
+
+
 app.use(methodOverride('_method'));
 
 //middlewere parses the urlencoded  payload
 app.use(express.urlencoded({ extended: true }));
 
 app.set('views', path.join(__dirname, 'views'));
+app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
 
 
