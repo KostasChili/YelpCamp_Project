@@ -22,12 +22,15 @@ const app = express();
 app.use(methodOverride('_method'));
 
 //middlewere parses the urlencoded  payload
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }))
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
 
+app.get('/home',(req,res)=>{
+    res.send('Home');
+});
 
 //index route containing all campgrounds in db
 app.get('/campgrounds', async (req, res) => {
