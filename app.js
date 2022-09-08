@@ -48,8 +48,8 @@ app.get('/campgrounds/new', (req, res) => {
 //details page route via campground ID
 app.get('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
-    const camp = await Campground.findById(id);
-    res.render('campgrounds/show', { camp });
+    const campground = await Campground.findById(id);
+    res.render('campgrounds/show', { campground });
 });
 
 
@@ -70,8 +70,8 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 //update route that updates the campground in the db via url encoded data
 app.put('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
-
-    const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campgrounds }, { new: true });
+    console.log(req.body);
+    const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campground }, { new: true });
     console.log(updatedCampground);
     res.redirect(`/campgrounds/${updatedCampground._id}`)
 });
