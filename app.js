@@ -70,9 +70,7 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 //update route that updates the campground in the db via url encoded data
 app.put('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
-    console.log(req.body);
     const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campground }, { new: true });
-    console.log(updatedCampground);
     res.redirect(`/campgrounds/${updatedCampground._id}`)
 });
 
