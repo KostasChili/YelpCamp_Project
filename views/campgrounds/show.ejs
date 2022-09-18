@@ -12,14 +12,16 @@
               <li class="list-group-item text-muted" ><%=campground.location%></li>
               <li class="list-group-item"><%=campground.price%> $/ night</li>
             </ul>
-            <div class="card-body">
+            <div class="card-body card-footer ">
+              <div class="d-flex justify-content-between">
               <a href="/campgrounds/<%=campground._id%>/edit" class="card-link btn btn-warning mb-1">Edit</a>
               
               <form class="mb-1 d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
                 <button class="btn btn-danger">Delete</button>
             </form>
-            <div class="card-footer">
-                <a href="/campgrounds" class="card-link">All Camps</a>
+          </div>
+            <div class="card-footer d-flex justify-content-center">
+                <a href="/campgrounds" class="card-link btn btn-success">All Camps</a>
             </div>
             </div>
           </div>

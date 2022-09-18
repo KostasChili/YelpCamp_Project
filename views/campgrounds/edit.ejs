@@ -3,28 +3,28 @@
     <div class="row">
         <h1 class="text-center">Edit <%=campground.title%> Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST">
+            <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" class="validation-required" novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="tile">Title</label>
                     <input class="form-control" type="text" name="campground[title]" id="tile"
-                        value="<%=campground.title%>">
+                        value="<%=campground.title%>" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" name="campground[location]" id="location"
-                        value="<%=campground.location%>">
+                        value="<%=campground.location%>" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="price">Price</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">$</span>
                         <input class="form-control" type="number" name="campground[price]" id="price"
-                            placeholder="0.00">
+                            placeholder="<%=campground.price%>" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="image">Update Image</label>
                         <input class="form-control" type="text" name="campground[image]" id="image"
-                            value="<%=campground.image%>">
+                            value="<%=campground.image%>" required>
                         <div class="mb-3">
                             <label class="form-label" for="current-image">Current Image</label>
                             <img src="<%=campground.image%>" alt="" id="current-image">
@@ -32,7 +32,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="description">Change description</label>
-                        <textarea class="form-control" name="campground[description]" id="description" cols="60" rows="10"><%=campground.description%></textarea>
+                        <textarea class="form-control" name="campground[description]" id="description" cols="60" rows="10" required><%=campground.description%></textarea>
                     </div>
                     <div class="mb-3">
                         <button class="btn btn-info">Update Campground</button>
