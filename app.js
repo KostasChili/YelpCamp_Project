@@ -6,11 +6,25 @@ const Campground = require('./models/campground');
 const methodOverride = require('method-override');
 const { urlencoded } = require('express');
 const campground = require('./models/campground');
-const { findByIdAndDelete } = require('./models/campground');
+const { findByIdAndDelete, validate } = require('./models/campground');
 const ejsMate= require('ejs-mate');
+const Joi = require ('joi');
 const { ppid } = require('process');
 const catchAsync=require('./utilities/catchAsync');
 const ExpressError = require('./utilities/ExpressError');
+const {campgroundSchema} = require('./schemas.js')
+
+//validator forcampground
+const validateCampground=(req,res,next)=>{
+    const {error} = campgroundSchema.validate(req.body);
+    if(error){
+        const msg=error.details.map(el=>el.message).join(',');
+        throw new ExpressError(msg,400);
+    }
+    else{
+        next();
+    }
+}
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
 
@@ -56,8 +70,7 @@ app.get('/campgrounds/:id', catchAsync( async (req, res) => {
 
 
 //creates and saves the new camp ground via post request from a form
-app.post('/campgrounds', catchAsync( async (req, res,next) => {
-    if(!req.body.campground) throw new ExpressError('Invalid campground data',400);
+app.post('/campgrounds',validateCampground,catchAsync( async (req, res,next) => {
     const campground = new Campground(req.body.campground);
     console.log(campground.title);
     await campground.save();
@@ -72,11 +85,11 @@ app.get('/campgrounds/:id/edit', catchAsync( async (req, res) => {
 }));
 
 //update route that updates the campground in the db via url encoded data
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id',validateCampground,catchAsync( async (req, res) => {
     const { id } = req.params;
     const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     res.redirect(`/campgrounds/${updatedCampground._id}`)
-});
+}));
 
 //delete path , takes the id of a campground finds it and deletes it from the db
 app.delete("/campgrounds/:id",catchAsync(async(req,res)=>{
