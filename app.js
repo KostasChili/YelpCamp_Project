@@ -14,7 +14,8 @@ const catchAsync=require('./utilities/catchAsync');
 const ExpressError = require('./utilities/ExpressError');
 const {campgroundSchema} = require('./schemas.js')
 const Review = require('./models/review');
-const {reviewSchema} = require('./schemas')
+const {reviewSchema} = require('./schemas');
+const review = require('./models/review');
 
 
 //validator for campground
@@ -113,7 +114,7 @@ const deletedCampground=await Campground.findByIdAndDelete(id);
 res.redirect('/campgrounds');
 }));
 
-
+//post path  to create a review
 app.post('/campgrounds/:id/review',validateReview,catchAsync( async(req,res)=>{
     const {id} = req.params;
     const campground = await Campground.findById(id);
@@ -122,6 +123,15 @@ app.post('/campgrounds/:id/review',validateReview,catchAsync( async(req,res)=>{
     await review.save();
     await campground.save();
     res.redirect(`/campgrounds/${id}`);
+}));
+
+//delete path for a review
+app.delete('/campgrounds/:id/reviews/:reviewId',catchAsync(async(req,res)=>{
+const {reviewId} = req.params;
+const {id} = req.params;
+const campground = await Campground.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
+const review = await Review.findByIdAndDelete(reviewId);
+res.redirect(`/campgrounds/${id}`);
 }));
 
 //404 show route this will run if no other route is hit ORDER MATTERS
