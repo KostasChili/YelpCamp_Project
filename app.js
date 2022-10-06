@@ -13,8 +13,11 @@ const { ppid } = require('process');
 const catchAsync=require('./utilities/catchAsync');
 const ExpressError = require('./utilities/ExpressError');
 const {campgroundSchema} = require('./schemas.js')
+const Review = require('./models/review');
+const {reviewSchema} = require('./schemas')
 
-//validator forcampground
+
+//validator for campground
 const validateCampground=(req,res,next)=>{
     const {error} = campgroundSchema.validate(req.body);
     if(error){
@@ -24,6 +27,19 @@ const validateCampground=(req,res,next)=>{
     else{
         next();
     }
+}
+
+//validator for rating
+const validateReview = (req,res,next)=>{
+    const {error} = reviewSchema.validate(req.body);
+    
+    if(error){
+        
+        const msg=error.details.map(el=>el.message).join(',');
+        throw new ExpressError(msg,400);
+    }
+    else
+    next();
 }
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
@@ -64,7 +80,7 @@ app.get('/campgrounds/new', (req, res) => {
 //details page route via campground ID
 app.get('/campgrounds/:id', catchAsync( async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id);
+    const campground = await Campground.findById(id).populate('reviews');
     res.render('campgrounds/show', { campground });
 }));
 
@@ -72,7 +88,6 @@ app.get('/campgrounds/:id', catchAsync( async (req, res) => {
 //creates and saves the new camp ground via post request from a form
 app.post('/campgrounds',validateCampground,catchAsync( async (req, res,next) => {
     const campground = new Campground(req.body.campground);
-    console.log(campground.title);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
 }));
@@ -85,7 +100,7 @@ app.get('/campgrounds/:id/edit', catchAsync( async (req, res) => {
 }));
 
 //update route that updates the campground in the db via url encoded data
-app.put('/campgrounds/:id',validateCampground,catchAsync( async (req, res) => {
+app.put('/campgrounds/:id',validateCampground,catchAsync( async (req, res,next) => {
     const { id } = req.params;
     const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     res.redirect(`/campgrounds/${updatedCampground._id}`)
@@ -96,6 +111,17 @@ app.delete("/campgrounds/:id",catchAsync(async(req,res)=>{
 const {id}=req.params;
 const deletedCampground=await Campground.findByIdAndDelete(id);
 res.redirect('/campgrounds');
+}));
+
+
+app.post('/campgrounds/:id/review',validateReview,catchAsync( async(req,res)=>{
+    const {id} = req.params;
+    const campground = await Campground.findById(id);
+    const review = new Review(req.body.review);
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
+    res.redirect(`/campgrounds/${id}`);
 }));
 
 //404 show route this will run if no other route is hit ORDER MATTERS
