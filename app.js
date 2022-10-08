@@ -1,22 +1,30 @@
+//express
 const express = require('express');
 const port = 3000;
 const path = require('path');
-const mongoose = require('mongoose');
-const Campground = require('./models/campground');
-const methodOverride = require('method-override');
-const { urlencoded } = require('express');
-const campground = require('./models/campground');
-const { findByIdAndDelete, validate } = require('./models/campground');
-const ejsMate= require('ejs-mate');
-const Joi = require ('joi');
-const { ppid } = require('process');
-const catchAsync=require('./utilities/catchAsync');
 const ExpressError = require('./utilities/ExpressError');
-const {campgroundSchema} = require('./schemas.js')
-const Review = require('./models/review');
-const {reviewSchema} = require('./schemas');
-const review = require('./models/review');
 
+//mongoose
+const mongoose = require('mongoose');
+const catchAsync=require('./utilities/catchAsync');
+
+//packages and middleware
+const methodOverride = require('method-override'); //method overide to create DELETE requests from forms
+const { urlencoded } = require('express');  //middleware a build in method of express to recognize incoming Request Obj as strings or Arrays
+const ejsMate= require('ejs-mate');       
+const Joi = require ('joi');               //schema description and validator 
+const { ppid } = require('process');
+
+//?????????
+const { findByIdAndDelete, validate } = require('./models/campground');
+
+//mongoose Models
+const Review = require('./models/review');
+const Campground = require('./models/campground');
+
+// JOI schemas
+const {reviewSchema} = require('./schemas');
+const {campgroundSchema} = require('./schemas.js')
 
 //validator for campground
 const validateCampground=(req,res,next)=>{
