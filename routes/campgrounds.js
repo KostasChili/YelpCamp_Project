@@ -28,12 +28,7 @@ router.get('/',catchAsync( async (req, res) => {
     res.render('campgrounds/index.ejs', { campgrounds});
 }));
 
-router.post('/',validateCampground,catchAsync( async (req, res,next) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    req.flash('success','Campground created successfully');
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
+
 
 
 //create new campground route - Serves the form to create a new campground via get request
@@ -46,12 +41,24 @@ router.get('/new', (req, res) => {
 router.get('/:id', catchAsync( async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id).populate('reviews');
+    if(!campground)
+    {
+        req.flash('error','cannot find campground')
+        res.redirect('/campgrounds')
+    }
+    else
     res.render('campgrounds/show', { campground });
 }));
 
 
 //creates and saves the new camp ground via post request from a form
 
+router.post('/',validateCampground,catchAsync( async (req, res,next) => {
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    req.flash('success','Campground created successfully');
+    res.redirect(`/campgrounds/${campground._id}`);
+}));
 
 //edit campground route - Serves the form to edit via get request
 router.get('/:id/edit', catchAsync( async (req, res) => {
@@ -72,6 +79,7 @@ router.put('/:id',validateCampground,catchAsync( async (req, res,next) => {
 router.delete("/:id",catchAsync(async(req,res)=>{
 const {id}=req.params;
 const deletedCampground=await Campground.findByIdAndDelete(id);
+req.flash('sucess','Successfully deleted Campground');
 res.redirect('/campgrounds');
 }));
 
