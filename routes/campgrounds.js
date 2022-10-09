@@ -79,7 +79,7 @@ router.put('/:id',validateCampground,catchAsync( async (req, res,next) => {
 router.delete("/:id",catchAsync(async(req,res)=>{
 const {id}=req.params;
 const deletedCampground=await Campground.findByIdAndDelete(id);
-req.flash('sucess','Successfully deleted Campground');
+req.flash('success','Successfully deleted Campground');
 res.redirect('/campgrounds');
 }));
 
