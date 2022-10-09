@@ -10,6 +10,7 @@
 <body class="d-flex flex-column vh-100">
     <%-include('../partials/navbar')%>
 <main class="container mt-5">
+    <%-include('../partials/flash.ejs')%>
 <%- body  %> 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js
 "></script>
@@ -18,25 +19,4 @@
 </body>
 </html>
 
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-(() => {
- 'use strict'
-
- // Fetch all the forms we want to apply custom Bootstrap validation styles to
- const forms = document.querySelectorAll('.validation-required')
-
- // Loop over them and prevent submission
- Array.from(forms).forEach(form => {
-   form.addEventListener('submit', event => {
-     if (!form.checkValidity()) {
-       event.preventDefault()
-       event.stopPropagation()
-     }
-
-     form.classList.add('was-validated')
-   }, false)
- })
-})()
-       
-   </script>
+<script src="/scripts/validateforms.js"></script>

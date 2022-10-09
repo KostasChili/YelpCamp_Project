@@ -1,146 +1,73 @@
 //express
 const express = require('express');
-const port = 3000;
 const path = require('path');
 const ExpressError = require('./utilities/ExpressError');
-
+const session = require('express-session');
 //mongoose
 const mongoose = require('mongoose');
-const catchAsync=require('./utilities/catchAsync');
-
 //packages and middleware
 const methodOverride = require('method-override'); //method overide to create DELETE requests from forms
 const { urlencoded } = require('express');  //middleware a build in method of express to recognize incoming Request Obj as strings or Arrays
 const ejsMate= require('ejs-mate');       
 const Joi = require ('joi');               //schema description and validator 
 const { ppid } = require('process');
-
 //?????????
 const { findByIdAndDelete, validate } = require('./models/campground');
+//flash
+const flash = require('connect-flash');
+const port = 3000;
 
-//mongoose Models
-const Review = require('./models/review');
-const Campground = require('./models/campground');
-
-// JOI schemas
-const {reviewSchema} = require('./schemas');
-const {campgroundSchema} = require('./schemas.js')
-
-//validator for campground
-const validateCampground=(req,res,next)=>{
-    const {error} = campgroundSchema.validate(req.body);
-    if(error){
-        const msg=error.details.map(el=>el.message).join(',');
-        throw new ExpressError(msg,400);
-    }
-    else{
-        next();
-    }
-}
-
-//validator for rating
-const validateReview = (req,res,next)=>{
-    const {error} = reviewSchema.validate(req.body);
-    
-    if(error){
-        
-        const msg=error.details.map(el=>el.message).join(',');
-        throw new ExpressError(msg,400);
-    }
-    else
-    next();
-}
-
+//mongo connection
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
-
 const db = mongoose.connection; // ?
 db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', () => { console.log("DB connected") });
 const app = express();
 
+//use flash
+app.use(flash());
 
+
+
+//session setup
+const sessionConfig = {
+    secret:'this should be a better secret',
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        httpOnly:true, //when this flag is set the script cannot be accessed by client side scripts.
+        expires:Date.now()+1000*60*60*24*7,
+        maxAge:1000*60*60*24*7,
+        
+
+    }
+    //default memory Store only for development mode
+    //store:mongo for later
+}
+app.use(session(sessionConfig));
+
+app.use((req,res,next)=>{
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 //use of method override package
 app.use(methodOverride('_method'));
 
 //middlewere parses the urlencoded  payload
 app.use(express.urlencoded({ extended: true }))
 
+//view engine and ejs
 app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
 
-app.get('/home',(req,res)=>{
-    res.send('Home');
-});
-
-//index route containing all campgrounds in db
-app.get('/campgrounds',catchAsync( async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index.ejs', { campgrounds });
-}));
-
-
-//create new campground route - Serves the form to create a new campground via get request
-app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new');
-});
-
-
-//details page route via campground ID
-app.get('/campgrounds/:id', catchAsync( async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id).populate('reviews');
-    res.render('campgrounds/show', { campground });
-}));
-
-
-//creates and saves the new camp ground via post request from a form
-app.post('/campgrounds',validateCampground,catchAsync( async (req, res,next) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-
-//edit campground route - Serves the form to edit via get request
-app.get('/campgrounds/:id/edit', catchAsync( async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    res.render('campgrounds/edit.ejs', { campground });
-}));
-
-//update route that updates the campground in the db via url encoded data
-app.put('/campgrounds/:id',validateCampground,catchAsync( async (req, res,next) => {
-    const { id } = req.params;
-    const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
-    res.redirect(`/campgrounds/${updatedCampground._id}`)
-}));
-
-//delete path , takes the id of a campground finds it and deletes it from the db
-app.delete("/campgrounds/:id",catchAsync(async(req,res)=>{
-const {id}=req.params;
-const deletedCampground=await Campground.findByIdAndDelete(id);
-res.redirect('/campgrounds');
-}));
-
-//post path  to create a review
-app.post('/campgrounds/:id/review',validateReview,catchAsync( async(req,res)=>{
-    const {id} = req.params;
-    const campground = await Campground.findById(id);
-    const review = new Review(req.body.review);
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`/campgrounds/${id}`);
-}));
-
-//delete path for a review
-app.delete('/campgrounds/:id/reviews/:reviewId',catchAsync(async(req,res)=>{
-const {reviewId} = req.params;
-const {id} = req.params;
-const campground = await Campground.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
-const review = await Review.findByIdAndDelete(reviewId);
-res.redirect(`/campgrounds/${id}`);
-}));
+//express router
+const campgroundsRouter =require('./routes/campgrounds');
+const reviewRouter = require ('./routes/review');
+app.use('/campgrounds',campgroundsRouter);
+app.use('/campgrounds/:id/review',reviewRouter);
+app.use(express.static(path.join(__dirname,'public')));
 
 //404 show route this will run if no other route is hit ORDER MATTERS
 app.all('*',(req,res,next)=>{
@@ -148,8 +75,6 @@ app.all('*',(req,res,next)=>{
 });
 
 //error handlers
-
-
 app.use((err,req,res,next)=>{
     const {statusCode=500}= err;
     if(!err.message) 
@@ -159,7 +84,6 @@ app.use((err,req,res,next)=>{
 
 
 //run the server
-
 app.listen(port, () => {
     console.log(`server running at port ${port}`);
 });
