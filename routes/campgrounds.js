@@ -9,6 +9,8 @@ const Review  = require('../models/review')
 
 //JOI schema
 const {campgroundSchema} = require('../schemas.js')
+//login
+const {isLoggedIn} = require('../middleware/auth');
 
 //validator for campground
 const validateCampground=(req,res,next)=>{
@@ -32,7 +34,7 @@ router.get('/',catchAsync( async (req, res) => {
 
 
 //create new campground route - Serves the form to create a new campground via get request
-router.get('/new', (req, res) => {
+router.get('/new',isLoggedIn,(req, res) => {
     res.render('campgrounds/new');
 });
 
@@ -61,7 +63,7 @@ router.post('/',validateCampground,catchAsync( async (req, res,next) => {
 }));
 
 //edit campground route - Serves the form to edit via get request
-router.get('/:id/edit', catchAsync( async (req, res) => {
+router.get('/:id/edit',isLoggedIn,catchAsync( async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     res.render('campgrounds/edit.ejs', { campground });
@@ -76,7 +78,7 @@ router.put('/:id',validateCampground,catchAsync( async (req, res,next) => {
 }));
 
 //delete path , takes the id of a campground finds it and deletes it from the db
-router.delete("/:id",catchAsync(async(req,res)=>{
+router.delete("/:id",isLoggedIn,catchAsync(async(req,res)=>{
 const {id}=req.params;
 const deletedCampground=await Campground.findByIdAndDelete(id);
 req.flash('success','Successfully deleted Campground');

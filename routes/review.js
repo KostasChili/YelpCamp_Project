@@ -11,6 +11,7 @@ const ExpressError = require('../utilities/ExpressError');
 
 // JOI schemas
 const {reviewSchema} = require('../schemas');
+const {isLoggedIn} = require('../middleware/auth');
 
 
 //validator for rating
@@ -27,7 +28,7 @@ const validateReview = (req,res,next)=>{
 }
 
 //post path  to create a review
-router.post('/',validateReview,catchAsync( async(req,res)=>{
+router.post('/',isLoggedIn,validateReview,catchAsync( async(req,res)=>{
     const {id} = req.params;
     const campground = await Campground.findById(id);
     const review = new Review(req.body.review);

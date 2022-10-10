@@ -16,6 +16,10 @@ const { findByIdAndDelete, validate } = require('./models/campground');
 //flash
 const flash = require('connect-flash');
 const port = 3000;
+//passport
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const User  = require('./models/user');
 
 //mongo connection
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
@@ -23,6 +27,7 @@ const db = mongoose.connection; // ?
 db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', () => { console.log("DB connected") });
 const app = express();
+
 
 //use flash
 app.use(flash());
@@ -46,6 +51,7 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 
+//flash messages middleware
 app.use((req,res,next)=>{
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -55,18 +61,27 @@ app.use((req,res,next)=>{
 app.use(methodOverride('_method'));
 
 //middlewere parses the urlencoded  payload
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+
+//use passport
+app.use(passport.initialize());
+app.use(passport.session()); //in order to use percistent loggin sessions Must be used before app.use(session)
+passport.use (new localStrategy(User.authenticate())); //authenticate genarates a function that is used in Passports local strategy. Its on the user Model
+passport.serializeUser(User.serializeUser());//serilization referse to how we store a user in the session
+passport.deserializeUser(User.deserializeUser());//how you remove a user from the session
 
 //view engine and ejs
-app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs',ejsMate);
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 //express router
 const campgroundsRouter =require('./routes/campgrounds');
 const reviewRouter = require ('./routes/review');
+const usersRouter = require('./routes/users')
 app.use('/campgrounds',campgroundsRouter);
 app.use('/campgrounds/:id/review',reviewRouter);
+app.use('/',usersRouter);
 app.use(express.static(path.join(__dirname,'public')));
 
 //404 show route this will run if no other route is hit ORDER MATTERS
