@@ -70,7 +70,7 @@ router.get('/:id/edit',isLoggedIn,catchAsync( async (req, res) => {
 }));
 
 //update route that updates the campground in the db via url encoded data
-router.put('/:id',validateCampground,catchAsync( async (req, res,next) => {
+router.put('/:id',isLoggedIn,validateCampground,catchAsync( async (req, res,next) => {
     const { id } = req.params;
     const updatedCampground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     req.flash('success','Successfully updated campground')

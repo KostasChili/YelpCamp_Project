@@ -40,7 +40,7 @@ router.post('/',isLoggedIn,validateReview,catchAsync( async(req,res)=>{
 }));
 
 //delete path for a review
-router.delete('/:reviewId',catchAsync(async(req,res)=>{
+router.delete('/:reviewId',isLoggedIn,catchAsync(async(req,res)=>{
 const {reviewId} = req.params;
 const {id} = req.params;
 const campground = await Campground.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
