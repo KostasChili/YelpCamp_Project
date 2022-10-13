@@ -51,12 +51,7 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 
-//flash messages middleware
-app.use((req,res,next)=>{
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next();
-})
+
 //use of method override package
 app.use(methodOverride('_method'));
 
@@ -70,19 +65,36 @@ passport.use (new localStrategy(User.authenticate())); //authenticate genarates 
 passport.serializeUser(User.serializeUser());//serilization referse to how we store a user in the session
 passport.deserializeUser(User.deserializeUser());//how you remove a user from the session
 
+
+
 //view engine and ejs
 app.engine('ejs',ejsMate);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+
+//flash messages middleware
+app.use((req,res,next)=>{
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+
+    next();
+});
+
 //express router
 const campgroundsRouter =require('./routes/campgrounds');
 const reviewRouter = require ('./routes/review');
-const usersRouter = require('./routes/users')
 app.use('/campgrounds',campgroundsRouter);
 app.use('/campgrounds/:id/review',reviewRouter);
+const usersRouter = require('./routes/users')
 app.use('/',usersRouter);
 app.use(express.static(path.join(__dirname,'public')));
+app.get('/home',(req,res)=>{
+    res.render('home.ejs')
+})
+
+
 
 //404 show route this will run if no other route is hit ORDER MATTERS
 app.all('*',(req,res,next)=>{
@@ -96,6 +108,7 @@ app.use((err,req,res,next)=>{
     err.message='Somethings wrong I can feel it';
     res.status(statusCode).render('error',{err});
 });
+
 
 
 //run the server

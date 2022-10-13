@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Campground=require('../models/campground');
-const Review =require('../models/review');
+const { authenticate } = require('passport');
+const Campground = require('./models/campground');
 const review = require('../models/review.js');
 const cities = require('./cities');
 const {places,descriptors}= require('./seedhelpers');
@@ -33,7 +33,8 @@ const seedDB=async()=>{
             image:'https://source.unsplash.com/collection/483251',
             description:"RandomText is a tool designers and developers can use to grab dummy text in either Lorem Ipsum or Giberish format. The API lets developers integrate random text generation into a CMS. The API offers parameters that let the user choose the type and number of elements and number of words.",
             price:randPrice,
-            review:[{}]
+            review:[{}],
+            author:'634427f17d98cd10413f0814'
         });
         await camp.save();
     }

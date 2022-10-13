@@ -3,13 +3,12 @@
    
    <h1>All Campgrounds</h1>
     <div>
-        <a href="/campgrounds/new">Make a new CampGround</a>
     </div>
     <% for(let camp of campgrounds){  %> 
-    <div class="card mb-3">
-        <div class="row">
+    <div class="card mb-3 rounded">
+        <div class="row mt-3">
             <div class="col-md-4">
-                <img  class="img-fluid" src="<%=camp.image%>">
+                <img  class="img-fluid border border-dark rounded" src="<%=camp.image%>">
             </div>
             <div class="col-mg-8">
                 <div class="card-body">
