@@ -11,21 +11,11 @@ const ExpressError = require('../utilities/ExpressError');
 
 // JOI schemas
 const {reviewSchema} = require('../schemas');
-const {isLoggedIn} = require('../middleware/auth');
+
+//custom middleware
+const {isLoggedIn,validateReview} = require('../middleware');
 
 
-//validator for rating
-const validateReview = (req,res,next)=>{
-    const {error} = reviewSchema.validate(req.body);
-    
-    if(error){
-        
-        const msg=error.details.map(el=>el.message).join(',');
-        throw new ExpressError(msg,400);
-    }
-    else
-    next();
-}
 
 //post path  to create a review
 router.post('/',isLoggedIn,validateReview,catchAsync( async(req,res)=>{
@@ -33,6 +23,7 @@ router.post('/',isLoggedIn,validateReview,catchAsync( async(req,res)=>{
     const campground = await Campground.findById(id);
     const review = new Review(req.body.review);
     campground.reviews.push(review);
+    review.author = req.user._id;
     await review.save();
     await campground.save();
     req.flash('success','Review created successfully')

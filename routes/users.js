@@ -4,7 +4,7 @@ const User = require("../models/user");
 const catchAsync = require("../utilities/catchAsync");
 const ExpressError = require("../utilities/ExpressError");
 const passport = require("passport");
-const { isLoggedIn } = require("../middleware/auth");
+const { isLoggedIn } = require("../middleware");
 
 router.get("/register", (req, res) => {
   res.render("users/register.ejs");
@@ -39,14 +39,20 @@ router.post("/login",passport.authenticate('local',{failureFlash:true,failureRed
     res.redirect(redirectUrl);
   });
 
-  router.get('/logout', (req,res)=>{
-     req.logout(function(err){
-      if(err){
-        return next(err)
-      }
-      req.flash('success','You where logged out successfully');
-      res.redirect('/campgrounds');
-     });
-  });
+  // router.get('/logout', (req,res)=>{
+  //    req.logout(function(err){
+  //     if(err){
+  //       return next(err)
+  //     }
+  //     req.flash('success','You where logged out successfully');
+  //     res.redirect('/campgrounds');
+  //    });
+  // }); STOP WORKING 
+
+  router.get('/logout',(req,res)=>{
+    req.logout();
+    req.flash('success','You where logged out successfully');
+    res.redirect('/campgrounds');
+  })
 
 module.exports = router;

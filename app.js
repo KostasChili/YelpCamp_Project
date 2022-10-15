@@ -78,7 +78,6 @@ app.use((req,res,next)=>{
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-
     next();
 });
 
@@ -90,10 +89,12 @@ app.use('/campgrounds/:id/review',reviewRouter);
 const usersRouter = require('./routes/users')
 app.use('/',usersRouter);
 app.use(express.static(path.join(__dirname,'public')));
+
+
+//simple home page
 app.get('/home',(req,res)=>{
     res.render('home.ejs')
 })
-
 
 
 //404 show route this will run if no other route is hit ORDER MATTERS

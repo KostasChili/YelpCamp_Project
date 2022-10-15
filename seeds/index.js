@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const { authenticate } = require('passport');
 const Campground = require('./models/campground');
-const review = require('../models/review.js');
-const cities = require('./cities');
-const {places,descriptors}= require('./seedhelpers');
+const User = require('./models/user')
+const review = require('./models/review.js');
+const cities = require('D:/Windows/Documents/GitHub/YelpCamp_Project/seeds/cities.js');
+const {places,descriptors}= require('D:/Windows/Documents/GitHub/YelpCamp_Project/seeds/seedhelpers.js');
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
@@ -22,6 +23,8 @@ const sample=array=>array[Math.floor(Math.random()*array.length)] // passes in a
 //this proccess happens as many itterations as we want
 const seedDB=async()=>{
     await Campground.deleteMany({}); //before seeding fake data into db delete all the older data
+   // await review.deleteMany({});
+    //await User.deleteMany({});
     
     for(let i=0;i<50;i++)
     {
@@ -34,10 +37,12 @@ const seedDB=async()=>{
             description:"RandomText is a tool designers and developers can use to grab dummy text in either Lorem Ipsum or Giberish format. The API lets developers integrate random text generation into a CMS. The API offers parameters that let the user choose the type and number of elements and number of words.",
             price:randPrice,
             review:[{}],
-            author:'634427f17d98cd10413f0814'
+            author:'634ae1615bd23550863e9a56'
         });
         await camp.save();
     }
+    console.log('Seed DB was run successfully');
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
 };
 
 seedDB().then(()=>{
@@ -47,4 +52,7 @@ seedDB().then(()=>{
     console.log('Error disconecting from db from seeds folder');
     console.log(err);
 })
+
+
+
 
