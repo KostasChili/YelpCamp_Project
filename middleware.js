@@ -54,3 +54,16 @@ module.exports.validateReview = (req,res,next)=>{
     else
     next();
 }
+
+
+module.exports.isRevAuthor = async (req,res,next)=>{
+    const {reviewId} = req.params;
+    const {id} = req.params;
+    const review = await reviewSchema.findById(reviewId);
+    if(!review.author.equals(req.user._id)){
+        req.flash('error',"You don't have permision to do that");
+        return res.redirect(`/campgrounds/${id}`);
+    }
+    next();
+
+}

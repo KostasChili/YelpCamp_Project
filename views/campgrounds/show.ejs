@@ -4,7 +4,7 @@
       <div class="card mb-3">
         <img src="<%=campground.image%>" class="card-img-top" alt="..." />
         <div class="card-body">
-          <h5 class="card-title"><%=campground.title%></h5>- By <a href=""><%=campground.author.username%></a>
+          <h5 class="card-title"><%=campground.title%></h5>- By <a  class="card-subtitle text-muted"  href=""><%=campground.author.username%></a>
           <p class="card-text"><%=campground.description%></p>
         </div>
         <ul class="list-group list-group-flush">
@@ -54,9 +54,11 @@
                 <h5 class="card-tittle">Rating : <%=rev.rating%></h5>
                 <p class="card-text">Review : <%=rev.body%></p>
                 <a class="card-subtitle text-muted" href="">- By <%=rev.author.username%></a>
+                <%if(currentUser && rev.author.equals(currentUser._id)) {%>
                 <form action="/campgrounds/<%=campground._id%>/review/<%=rev._id%>?_method=DELETE" method="POST">
                 <button class="btn btn-sm btn-danger">Delete</button>
               </form>
+              <%}%>
             </div>
           </div>
             <%}%>

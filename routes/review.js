@@ -13,7 +13,7 @@ const ExpressError = require('../utilities/ExpressError');
 const {reviewSchema} = require('../schemas');
 
 //custom middleware
-const {isLoggedIn,validateReview} = require('../middleware');
+const {isLoggedIn,validateReview, isAuthor, isRevAuthor} = require('../middleware');
 
 
 
@@ -31,7 +31,7 @@ router.post('/',isLoggedIn,validateReview,catchAsync( async(req,res)=>{
 }));
 
 //delete path for a review
-router.delete('/:reviewId',isLoggedIn,catchAsync(async(req,res)=>{
+router.delete('/:reviewId',isLoggedIn,isRevAuthor,catchAsync(async(req,res)=>{
 const {reviewId} = req.params;
 const {id} = req.params;
 const campground = await Campground.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
