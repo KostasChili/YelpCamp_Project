@@ -1,5 +1,16 @@
+if(process.env.NODE_ENV !=='production')
+{
+    require('dotenv').config();
+}
+
+
 const express = require('express');
 const router = express.Router();
+//Multer
+const multer = require('multer');
+const {storage} = require('../cloudinary/index');
+const upload = multer({storage});
+
 
 const ExpressError = require('../utilities/ExpressError');
 const catchAsync=require('../utilities/catchAsync');
@@ -24,7 +35,11 @@ const {isAuthor,isLoggedIn,validateCampground} = require('../middleware');
 //grouped routes
 router.route('/')
 .get(catchAsync(campgrounds.index)) //index route for campgrounds
-.post(isLoggedIn,validateCampground,catchAsync(campgrounds.new)); //create campground form
+//.post(isLoggedIn,validateCampground,catchAsync(campgrounds.new)); //create campground form
+.post(upload.array('campground[image]',12),(req,res)=>{
+    console.log(req.files);
+    res.send('It worked')
+})
 
 
 //create new campground route - Serves the form to create a new campground via get request

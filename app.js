@@ -16,6 +16,7 @@ const { findByIdAndDelete, validate } = require('./models/campground');
 //flash
 const flash = require('connect-flash');
 
+
 //passport
 const passport = require('passport');
 const localStrategy = require('passport-local');
@@ -95,7 +96,6 @@ app.use(express.static(path.join(__dirname,'public')));
 app.get('/home',(req,res)=>{
     res.render('home.ejs')
 })
-
 
 //404 show route this will run if no other route is hit ORDER MATTERS
 app.all('*',(req,res,next)=>{
