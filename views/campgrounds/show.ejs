@@ -1,4 +1,5 @@
 <%layout('./layouts/boilerplate')%>
+<link rel="stylesheet" href="/stylesheets/stars.css">
   <div class="row">
     <div class="col-6">
       <div class="card mb-3">
@@ -51,7 +52,8 @@
           <%for(rev of campground.reviews){%>
             <div class="card mb-3">
               <div class="card-body">
-                <h5 class="card-tittle">Rating : <%=rev.rating%></h5>
+               <h3>Rating</h3>
+               <p class="card-title starability-result" data-rating="<%=rev.rating%>"></p>
                 <p class="card-text">Review : <%=rev.body%></p>
                 <a class="card-subtitle text-muted" href="">- By <%=rev.author.username%></a>
                 <%if(currentUser && rev.author.equals(currentUser._id)) {%>

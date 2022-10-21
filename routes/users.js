@@ -10,14 +10,14 @@ const { registerRenderForm } = require("../controllers/users");
 //controllers
 const users = require('../controllers/users');
 
-router.get("/register",users.registerRenderForm);
+router.route('/register')
+.get(users.registerRenderForm)
+.post(catchAsync(users.createUser));
 
-router.post("/register",catchAsync(users.createUser));
+router.route('/login')
+.get (users.loginRenderForm)
+.post (passport.authenticate('local',{failureFlash:true,failureRedirect:'/login'}),users.loginPost)
 
-router.get("/login",users.loginRenderForm);
-
-//pass authenticate is a middleware provided by passport
-router.post("/login",passport.authenticate('local',{failureFlash:true,failureRedirect:'/login'}),users.loginPost)
 
   // router.get('/logout', (req,res)=>{
   //    req.logout(function(err){
@@ -27,7 +27,7 @@ router.post("/login",passport.authenticate('local',{failureFlash:true,failureRed
   //     req.flash('success','You where logged out successfully');
   //     res.redirect('/campgrounds');
   //    });
-  // }); STOPED WORKING 
+  // }); //STOPED WORKING 
 
   router.get('/logout',users.logout);
 

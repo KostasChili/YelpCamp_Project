@@ -15,7 +15,7 @@ const { ppid } = require('process');
 const { findByIdAndDelete, validate } = require('./models/campground');
 //flash
 const flash = require('connect-flash');
-const port = 3000;
+
 //passport
 const passport = require('passport');
 const localStrategy = require('passport-local');
@@ -110,7 +110,9 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render('error',{err});
 });
 
-
+//in a hosting environment the port is dynamically asigned
+//we use environment viriables
+const port = process.env.PORT || 3000;
 
 //run the server
 app.listen(port, () => {

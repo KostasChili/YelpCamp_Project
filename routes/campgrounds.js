@@ -20,28 +20,24 @@ const campgrounds = require('../controllers/campgrounds');
 //custom middleware
 const {isAuthor,isLoggedIn,validateCampground} = require('../middleware');
 
-//index route containing all campgrounds in db
-router.get('/',catchAsync(campgrounds.index));
+
+//grouped routes
+router.route('/')
+.get(catchAsync(campgrounds.index)) //index route for campgrounds
+.post(isLoggedIn,validateCampground,catchAsync(campgrounds.new)); //create campground form
+
 
 //create new campground route - Serves the form to create a new campground via get request
 router.get('/new',isLoggedIn,campgrounds.newRenderForm);
 
+router.route('/:id')
+.get( catchAsync(campgrounds.show))//campgrounds details page
+.put(isLoggedIn,isAuthor,validateCampground,catchAsync(campgrounds.edit))//update route for campgrounds
+.delete(isLoggedIn,isAuthor,catchAsync(campgrounds.delete))//delete route for campgrounds
 
-//details page route via campground ID
-router.get('/:id', catchAsync(campgrounds.show));
-
-
-//creates and saves the new camp ground via post request from a form
-router.post('/',isLoggedIn,validateCampground,catchAsync(campgrounds.new));
 
 //edit campground route - Serves the form to edit via get request
 router.get('/:id/edit',isLoggedIn,isAuthor,catchAsync(campgrounds.editRenderForm));
-
-//update route that updates the campground in the db via url encoded data
-router.put('/:id',isLoggedIn,isAuthor,validateCampground,catchAsync(campgrounds.edit));
-
-//delete path , takes the id of a campground finds it and deletes it from the db
-router.delete("/:id",isLoggedIn,isAuthor,catchAsync(campgrounds.delete));
 
 
 module.exports = router;
