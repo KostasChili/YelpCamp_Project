@@ -35,11 +35,8 @@ const {isAuthor,isLoggedIn,validateCampground} = require('../middleware');
 //grouped routes
 router.route('/')
 .get(catchAsync(campgrounds.index)) //index route for campgrounds
-//.post(isLoggedIn,validateCampground,catchAsync(campgrounds.new)); //create campground form
-.post(upload.array('campground[image]',12),(req,res)=>{
-    console.log(req.files);
-    res.send('It worked')
-})
+.post(isLoggedIn,upload.array('campground[image]'),validateCampground,catchAsync(campgrounds.new)); //create campground
+
 
 
 //create new campground route - Serves the form to create a new campground via get request
@@ -47,7 +44,7 @@ router.get('/new',isLoggedIn,campgrounds.newRenderForm);
 
 router.route('/:id')
 .get( catchAsync(campgrounds.show))//campgrounds details page
-.put(isLoggedIn,isAuthor,validateCampground,catchAsync(campgrounds.edit))//update route for campgrounds
+.put(isLoggedIn,isAuthor,upload.array('campground[image]'),validateCampground,catchAsync(campgrounds.edit))//update route for campgrounds
 .delete(isLoggedIn,isAuthor,catchAsync(campgrounds.delete))//delete route for campgrounds
 
 

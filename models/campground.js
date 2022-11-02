@@ -20,9 +20,12 @@ const CampgroundSchema = new Schema({
         type:String
     },
     
-    image:{
-        type:String
-    },
+    images:[
+        {
+            url:String,
+            fileName:String
+        }
+    ],
     author:{
         type:Schema.Types.ObjectId,
         ref:'User'

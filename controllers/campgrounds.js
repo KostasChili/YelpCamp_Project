@@ -12,6 +12,7 @@ module.exports.newRenderForm = (req, res) => {
 
 module.exports.new = async(req,res)=>{
     const campground = new Campground(req.body.campground);
+    campground.images=req.files.map(f=>({url:f.path, fileName:f.filename}));
     campground.author=req.user._id;
     await campground.save();
     req.flash('success',`campground ${campground.title}, was creted successfully`);
@@ -50,6 +51,9 @@ module.exports.editRenderForm = async (req, res) => {
 module.exports.edit =  async (req, res) => {
     const {id} = req.params;
     const campground =  await Campground.findByIdAndUpdate(id,{...req.body.campground});
+    const imgs =req.files.map(f=>({url:f.path, fileName:f.filename}));
+    campground.images.push(...imgs);
+    await campground.save();
     res.redirect(`/campgrounds/${id}`);
 }
 
