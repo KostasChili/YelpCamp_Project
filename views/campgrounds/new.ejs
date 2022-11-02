@@ -29,10 +29,10 @@
                     <textarea class="form-control" name="campground[description]" id="description" cols="30" rows="5" placeholder="write here" required></textarea>
                     <div class="valid-feedback">ok!</div>
                 </div>
-             <div class="mb-3">
-                <label class="form label" for="image">Upload Images</label>
-            <input class="form-controll" type="file" name="campground[image]" id="image" multiple>
-             </div>
+                <div class="mb-3 custom-file">
+                    <label for="image" class="custom-file-label">Upload Image(s)</label>
+                    <input class="form-control form-control-sm form-file-input" id="image" type="file" name="campground[image]" multiple>
+                  </div>
                 <!-- <div class="mb-3">
                     <label class="form-label" for="image">Upload an image</label>
                     <input class="form-control" type="text" name="campground[image]" id="image"
