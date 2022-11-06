@@ -10,7 +10,7 @@ fileName:String
 
 
 ImageSchema.virtual('thumbnail').get(function(){
-   return this.url.replace('/upload','/upload/w_400,h_300');
+   return this.url.replace('/upload','/upload/w_300,h_200');
 });
 
 const CampgroundSchema = new Schema({
@@ -25,6 +25,17 @@ const CampgroundSchema = new Schema({
 
     description:{
         type:String
+    },
+    geometry:{
+        type:{
+            type:String,
+            enum:['Point'],
+            required:true
+        },
+        coordinates:{
+            type:[Number],
+            required:true
+        },
     },
 
     location:{
@@ -59,3 +70,4 @@ CampgroundSchema.post('findOneAndDelete',async function(doc){
 
 module.exports=mongoose.model('Campground',CampgroundSchema);
 
+0

@@ -31,15 +31,15 @@ const seedDB=async()=>{
         const rand1000=Math.floor(Math.random()*1000);
         const randPrice=Math.floor(Math.random()*20+10);
         const camp= new Campground({
-            location:`${cities[rand1000].city},${cities[rand1000].state}`,
+            location:`${cities[rand1000].city}, ${cities[rand1000].state}`,
             title:`${sample(places)} ${sample(descriptors)}`,
             images:[{
-                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667394265/YelpCamp/v87ta5a4xljsecxkagtq.jpg',
+                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667742456/YelpCamp/uvjdhvw8enc5tvc7hlom.jpg',
                 fileName:'YelpCamp/v87ta5a4xljsecxkagtq'
 
             },
             {
-                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667394265/YelpCamp/tdfhns3pnbdi0ptudfqk.jpg',
+                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667742457/YelpCamp/d8gz8yzqusxlbf2wj9in.jpg',
                 fileName: 'YelpCamp/tdfhns3pnbdi0ptudfqk'
             }],
             description:"RandomText is a tool designers and developers can use to grab dummy text in either Lorem Ipsum or Giberish format. The API lets developers integrate random text generation into a CMS. The API offers parameters that let the user choose the type and number of elements and number of words.",

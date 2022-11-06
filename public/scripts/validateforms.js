@@ -18,7 +18,4 @@
         })
        })()
 
-        bsCustomFileInput.init(); // bs-custom-input
-     
-
-       
+    
