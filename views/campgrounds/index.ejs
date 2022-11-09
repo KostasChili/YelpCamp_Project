@@ -8,7 +8,11 @@
     <div class="card mb-3 rounded">
         <div class="row mt-2">
             <div class="col-md-4 ms-2">
+                <%if(camp.images.length){%>
                 <img  class="img-fluid border border-dark rounded" src="<%=camp.images[0].thumbnail%>">
+                <%} else {%>
+                    <img  class="img-fluid border border-dark rounded" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIUAAACFCAMAAABCBMsOAAAAKlBMVEXMzMzy8vLd3d3Jycn19fXj4+Pn5+fv7+/W1tbs7OzPz8/T09PZ2dng4ODNSTFbAAADHklEQVR4nO2a23rCIAyAC0mhHPr+r7uEQw9uOrGZ7iL/lavf2t8QEkAn+x+YFEVRFEVRFEVRFEVRFEX5b8CnBVgh2eWjHmzgvEGTPiYA0zIHRDTG4Pohh2VtBoXw7iGBPgwlCGiCpxf4XoUpZhdMjQEpOJumGOjl8jYDmDInQjcINkEZiIwG53cMCUCkRKijUAzmJW5vRk6MN0hwIvQgGONyOhUq8HQ93v1nASgImQ1qKtZEuA0+OPSY/8yAUnH2eyK4dS9OaTkUqswB+qPESGvw50TYHhQdXXXbICQaEi/+fIBjIqCZc5sNnVAGaMtIoLkqXcQPw0Af0VmSAjbrTJCbX4Z22dIFu71/EUoEag1mL8xkEQh/S3+zEfzhr8stxZ4NXuNqGXU9F9tnxVFELEJNhDVxZ6AX8yBu5qy9aAEz3cOX+cgWEV5AoLEtW/Ghm/lXch1WvN5eTX/48xYQ06FQwHw9FiWeccxiPhVRCYtppXvYIYtWRLuGiAUlBroRi6VNzv5DAhGLkhhxwGJtFr2hiliAa13pWQvbLGZJC74rrvC8Rbop2jIWfNcwYAFlSGouyVlMbblytnjUrHMwfv+Ri5DFTC0s31oEn+97nBYUQhZla3FjwVFfn6ykMhaxJsbRIvoyC95pwc/HUyxKp6WLPtYL8VFUpCy4KeajRdrWUDU5wB76xl9ZLCUxdotSyBolOdjqbrZKWUwl+LtFPKxDeelfrJAqxI8eUhZ1a7FbhNPC1tvWOYz/8ShLzIITw24Wy3lJfji9Me6n/5YakYUfsFmE+xsDDN/DIWbB5YG3PcUiP9qdIH4Lh5jF1CZFsfCP90job54oZgFtzcAW9reNGuK5tMvFIu4W4ReJEo4k380Y3y3i7xLMocUIWjjsFs/tnGkJ3sMhZ9FOJ563oOywouvOyqgFEWp2CFqAH7dAY6UtyoqC50h2AyRZiym3WIx/CQSrnEWdoZHX3gNHFywhcX7RgXqoM3qUw6c5RtBibedb4whaTOnKQZ/cVyXulTg07q+NRzmd9Y4iJaEoiqIoiqIoiqIoiqIoyr/kC1kuHtMMznYGAAAAAElFTkSuQmCC">
+                    <%}%> 
             </div>
             <div class="col-mg-8">
                 <div class="card-body">
