@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Review = require('./review');
 const Schema = mongoose.Schema;
-
+//mongoose by default does not return the virtuals of the model
+const opts = {toJSON:{virtuals:true}};
 
 const ImageSchema = new Schema({
 url:String,
@@ -12,6 +13,9 @@ fileName:String
 ImageSchema.virtual('thumbnail').get(function(){
    return this.url.replace('/upload','/upload/w_300,h_200');
 });
+
+
+
 
 const CampgroundSchema = new Schema({
     title:{
@@ -55,8 +59,13 @@ const CampgroundSchema = new Schema({
         }
     ]
 
-});
+},opts);
 
+
+//return the markup text for mapbox cluster map
+CampgroundSchema.virtual('properties.popUpMarkup').get(function(){
+    return `<strong><a href="/campgrounds/${this._id}">${this.title}</a></strong><p>${this.description.substring(0,20)}...</p>`
+ });
 
 CampgroundSchema.post('findOneAndDelete',async function(doc){
     if(doc){

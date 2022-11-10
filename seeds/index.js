@@ -26,7 +26,7 @@ const seedDB=async()=>{
    // await review.deleteMany({});
     //await User.deleteMany({});
     
-    for(let i=0;i<50;i++)
+    for(let i=0;i<150;i++)
     {
         const rand1000=Math.floor(Math.random()*1000);
         const randPrice=Math.floor(Math.random()*20+10);
@@ -42,7 +42,7 @@ const seedDB=async()=>{
                 url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667742457/YelpCamp/d8gz8yzqusxlbf2wj9in.jpg',
                 fileName: 'YelpCamp/tdfhns3pnbdi0ptudfqk'
             }],
-            geometry:{ type: 'Point', coordinates: [ 23.91564, 40.153635 ] },
+            geometry:{ type: 'Point', coordinates: [ cities[rand1000].longitude,cities[rand1000].latitude] },
             description:"RandomText is a tool designers and developers can use to grab dummy text in either Lorem Ipsum or Giberish format. The API lets developers integrate random text generation into a CMS. The API offers parameters that let the user choose the type and number of elements and number of words.",
             price:randPrice,
             review:[{}],

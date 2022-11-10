@@ -1,9 +1,8 @@
 <%layout('./layouts/boilerplate')%>
    
-   
+<link rel="stylesheet" href="/stylesheets/mbxClusterMap.css"></link>
+<div id="map"></div>
    <h1>All Campgrounds</h1>
-    <div>
-    </div>
     <% for(let camp of campgrounds){  %> 
     <div class="card mb-3 rounded">
         <div class="row mt-2">
@@ -29,4 +28,9 @@
         </div>
     </div>
     <% } %> 
+    <script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const campgrounds = {features:<%-JSON.stringify(campgrounds)%>}
+    </script>
 
+<script src="/scripts/mbxClusterMap.js"></script>
