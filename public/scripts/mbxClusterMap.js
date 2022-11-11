@@ -125,3 +125,4 @@ map.on('mouseleave', 'clusters', () => {
 map.getCanvas().style.cursor = '';
 });
 });
+map.addControl(new mapboxgl.NavigationControl());
