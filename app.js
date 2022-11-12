@@ -13,6 +13,8 @@ const Joi = require ('joi');               //schema description and validator
 const { ppid } = require('process');
 //?????????
 const { findByIdAndDelete, validate } = require('./models/campground');
+//express-mongo-sanitize
+const mongoSanitize = require('express-mongo-sanitize');
 //flash
 const flash = require('connect-flash');
 
@@ -29,6 +31,14 @@ db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', () => { console.log("DB connected") });
 const app = express();
 
+//use sanitizer
+// By default, $ and . characters are removed completely from user-supplied input in the following places:
+// - req.body
+// - req.params
+// - req.headers
+// - req.query
+// To remove data using these defaults:
+app.use(mongoSanitize());
 
 //use flash
 app.use(flash());
@@ -76,6 +86,7 @@ app.set('view engine', 'ejs');
 
 //flash messages middleware
 app.use((req,res,next)=>{
+    console.log(req.query);
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
