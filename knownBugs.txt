@@ -1,0 +1,9 @@
+1.escapeHtml does not work on revies
+
+2.If you visit the show page of a campground while not loged in
+    a)if you log in you will be redirected to the index page and wont return to the show page
+    b)if you try to leave a review while not logged in you will be redirected to log in but after the log in 
+    you will be redirected to an error page and not to the show page
+    Error: Page not found at D:\Windows\Documents\GitHub\YelpCamp_Project\app.js:112:10 at Layer.handle [as handle_request]
+    there is a problem with the redirect url 
+    examlpe:campgrounds/63712203d0e68e877d3c0bab/review

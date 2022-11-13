@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV!=='production')
+{
+    require('dotenv').config;
+}
 //express
 const express = require('express');
 const path = require('path');
@@ -47,11 +51,13 @@ app.use(flash());
 
 //session setup
 const sessionConfig = {
-    secret:'this should be a better secret',
+    name:'session', 
+    secret:'thisshouldbeabettersecret',
     resave:false,
     saveUninitialized:true,
     cookie:{
         httpOnly:true, //when this flag is set the script cannot be accessed by client side scripts.
+        //secure:true, //this cookie works only on https
         expires:Date.now()+1000*60*60*24*7,
         maxAge:1000*60*60*24*7,
         
@@ -86,7 +92,6 @@ app.set('view engine', 'ejs');
 
 //flash messages middleware
 app.use((req,res,next)=>{
-    console.log(req.query);
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');

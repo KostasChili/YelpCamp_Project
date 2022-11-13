@@ -34,12 +34,12 @@ const seedDB=async()=>{
             location:`${cities[rand1000].city}, ${cities[rand1000].state}`,
             title:`${sample(places)} ${sample(descriptors)}`,
             images:[{
-                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667742456/YelpCamp/uvjdhvw8enc5tvc7hlom.jpg',
+                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1668187209/YelpCamp/itegtoahy7olca69ralr.jpg',
                 fileName:'YelpCamp/v87ta5a4xljsecxkagtq'
 
             },
             {
-                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1667742457/YelpCamp/d8gz8yzqusxlbf2wj9in.jpg',
+                url: 'https://res.cloudinary.com/dq4xdfc6v/image/upload/v1668117150/YelpCamp/mzmhvsvhe5z4sqnu1fy7.jpg',
                 fileName: 'YelpCamp/tdfhns3pnbdi0ptudfqk'
             }],
             geometry:{ type: 'Point', coordinates: [ cities[rand1000].longitude,cities[rand1000].latitude] },
