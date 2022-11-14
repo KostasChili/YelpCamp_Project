@@ -22,7 +22,8 @@ const { findByIdAndDelete, validate } = require('./models/campground');
 const mongoSanitize = require('express-mongo-sanitize');
 //flash
 const flash = require('connect-flash');
-
+//mongoDBstore
+const MongoStore=require('connect-mongo');
 
 //passport
 const passport = require('passport');
@@ -35,8 +36,7 @@ const helmet =require('helmet');
 //mongo connection
 //'mongodb://localhost:27017/yelp-camp-DB'
 const dbUrl = process.env.MONGO_URL;
-//mongoose.connect(dbUrl);
-mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
+mongoose.connect(dbUrl);
 const db = mongoose.connection; 
 
 db.on('error', console.error.bind(console, "connection error:"));
@@ -108,10 +108,18 @@ const fontSrcUrls = [];
 
 
 
+const secret = process.env.SECRET;
 //session setup
 const sessionConfig = {
+    store:MongoStore.create({
+     mongoUrl:dbUrl || "mongodb://localhost:27017/yelp-camp-DB", //atlas || local
+     secret:secret || 'thishloudhavebeenabettersecret',
+     //in express-session>=1.10.0 you dont want to resave tall the session on the db every single time, lazy update the session
+     //by limiting a period of thime
+     touchAfter:24*60*60   
+    }),
     name:'session', 
-    secret:'thisshouldbeabettersecret',
+    secret:secret || 'thishloudhavebeenabettersecret', 
     resave:false,
     saveUninitialized:true,
     cookie:{
