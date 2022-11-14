@@ -1,6 +1,6 @@
 if(process.env.NODE_ENV!=='production')
 {
-    require('dotenv').config;
+    require('dotenv').config({path:'.env'});
 }
 //express
 const express = require('express');
@@ -9,6 +9,7 @@ const ExpressError = require('./utilities/ExpressError');
 const session = require('express-session');
 //mongoose
 const mongoose = require('mongoose');
+
 //packages and middleware
 const methodOverride = require('method-override'); //method overide to create DELETE requests from forms
 const { urlencoded } = require('express');  //middleware a build in method of express to recognize incoming Request Obj as strings or Arrays
@@ -32,8 +33,12 @@ const User  = require('./models/user');
 const helmet =require('helmet');
 
 //mongo connection
+//'mongodb://localhost:27017/yelp-camp-DB'
+const dbUrl = process.env.MONGO_URL;
+//mongoose.connect(dbUrl);
 mongoose.connect('mongodb://localhost:27017/yelp-camp-DB');
-const db = mongoose.connection; // ?
+const db = mongoose.connection; 
+
 db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', () => { console.log("DB connected") });
 const app = express();
